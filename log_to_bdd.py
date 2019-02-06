@@ -12,13 +12,20 @@ PORT_DST = 6
 LOG_MSG = 7
 
 client = InfluxDBClient(host='localhost', port=8086)
+client.create_database('malilog_logs')
 client.switch_database('malilog_logs')
 
 
 def get_logs_lines(path):
     with open(path, 'r') as f:
         for line in f:
-            tokens = line.strip().split(' ')
+            tokens = []
+            tokens_raw = line.strip().split()
+            date = ' '.join([tokens_raw[0], tokens_raw[1]])
+            tokens.append(date)
+            tokens.extend(tokens_raw[2:8])
+            msg = ' '.join(tokens_raw[8:len(tokens_raw)])
+            tokens.append(msg)
             yield tokens
 
 
@@ -33,7 +40,7 @@ class MySeriesHelper(SeriesHelper):
 
         # The series name must be a string. Add dependent fields/tags
         # in curly brackets.
-        series_name = 'events.stats.{server_name}'
+        series_name = '{server_name}'
 
         # Defines all the fields in this time series.
         fields = ['port_src', 'port_dst']
@@ -58,10 +65,11 @@ entries = get_logs_lines(sys.argv[1])
 # e.g [2019-02-06 14:27:40] TCP ipv4 139.143.119.26  18.123.82.2 30249 43781 Default message for logs
 for entry in entries:
     print("Current log line : ", entry)
-    MySeriesHelper(time=entry[TIME],
-                   server_name='Malilog server 1',
+    MySeriesHelper(time=entry[TIME][1:-1],
+                   server_name='Malilog-server-1',
                    l4_proto=entry[L4_PROTO],
                    ip_src=entry[IP_SRC], ip_dst=entry[IP_DST],
                    port_src=entry[PORT_SRC], port_dst=entry[PORT_DST],
                    log_message=entry[LOG_MSG]
                    )
+    MySeriesHelper.commit()
