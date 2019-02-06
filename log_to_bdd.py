@@ -12,6 +12,7 @@ PORT_DST = 6
 LOG_MSG = 7
 
 client = InfluxDBClient(host='localhost', port=8086)
+#client.drop_database('malilog_logs')
 client.create_database('malilog_logs')
 client.switch_database('malilog_logs')
 
@@ -64,12 +65,12 @@ entries = get_logs_lines(sys.argv[1])
 
 # e.g [2019-02-06 14:27:40] TCP ipv4 139.143.119.26  18.123.82.2 30249 43781 Default message for logs
 for entry in entries:
-    print("Current log line : ", entry)
+    #print("Current log line : ", entry)
     MySeriesHelper(time=entry[TIME][1:-1],
                    server_name='Malilog-server-1',
                    l4_proto=entry[L4_PROTO],
                    ip_src=entry[IP_SRC], ip_dst=entry[IP_DST],
-                   port_src=entry[PORT_SRC], port_dst=entry[PORT_DST],
+                   port_src=int(entry[PORT_SRC]), port_dst=int(entry[PORT_DST]),
                    log_message=entry[LOG_MSG]
                    )
     MySeriesHelper.commit()
