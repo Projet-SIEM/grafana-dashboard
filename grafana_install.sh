@@ -22,6 +22,14 @@ apt-get install -y influxdb
 systemctl start influxdb
 systemctl enable influxdb
 
+# Install datasource configuration file for Malilog
+cp datasource.yaml /etc/grafana/provisioning/datasources/
+
+# Install dashboard JSON descriptor for Malilog dashboard
+sudo mkdir /var/lib/grafana/dashboards
+cp dashboard.yaml /etc/grafana/provisioning/dashboards/
+cp MalilogDashboard.json /var/lib/grafana/dashboards
+
 # Install influxdb python API
 apt-get install -y python3-pip
 python3 -m pip install influxdb
