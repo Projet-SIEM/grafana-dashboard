@@ -1,7 +1,10 @@
 import sys
 from influxdb import InfluxDBClient
 from influxdb import SeriesHelper
+import geoip2.database
+import geohash2
 
+GEOLOC_DB_PATH = '/usr/share/geolocation-database/geolite2-city/GeoLite2-City.mmdb'
 TIME = 0
 L4_PROTO = 1
 L3_PROTO = 2
@@ -47,7 +50,7 @@ class MySeriesHelper(SeriesHelper):
         fields = ['port_src', 'port_dst']
 
         # Defines all the tags for the series.
-        tags = ['server_name', 'l3_proto', 'l4_proto', "ip_src", "ip_dst", "log_message"]
+        tags = ['server_name', 'src_geohash', 'l3_proto', 'l4_proto', "ip_src", "ip_dst", "log_message"]
 
         # Defines the number of data points to store prior to writing
         # on the wire.
@@ -62,12 +65,21 @@ if len(sys.argv) < 2:
     exit(-1)
 
 entries = get_logs_lines(sys.argv[1])
+reader = geoip2.database.Reader(GEOLOC_DB_PATH)
 
 # e.g [2019-02-06 14:27:40] TCP ipv4 139.143.119.26  18.123.82.2 30249 43781 Default message for logs
 for entry in entries:
     print("Current log line : ", entry)
+    try:
+        geoloc = reader.city(entry[IP_SRC])
+        latitude = geoloc.location.latitude
+        longitude = geoloc.location.longitude
+        geohash = geohash2.encode(latitude, longitude)
+    except geoip2.errors.AddressNotFoundError:
+        geohash = "UNKNOW"
     MySeriesHelper(time=entry[TIME][1:-1],
                    server_name='Malilog-server-1',
+                   src_geohash = geohash,
                    l3_proto=entry[L3_PROTO],
                    l4_proto=entry[L4_PROTO],
                    ip_src=entry[IP_SRC], ip_dst=entry[IP_DST],
