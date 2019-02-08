@@ -27,8 +27,10 @@ apt-get install -y python3-pip
 python3 -m pip install influxdb
 
 # Install geoDB and geohash for IP geolocation on the dashboard
-mkdir geoDB
+mkdir geolite2-city
 wget https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
-tar -xzf GeoLite2-City.tar.gz -C geoDB --strip-components=1
+tar -xzf GeoLite2-City.tar.gz -C geolite2-city --strip-components=1
+mkdir /usr/share/geolocation-database
+mv geolite2-city /usr/share/geolocation-database
 python3 -m pip install geoip2
-python3 -m pip install Geohash
+python3 -m pip install Geohash2
