@@ -75,7 +75,7 @@ for entry in entries:
         latitude = geoloc.location.latitude
         longitude = geoloc.location.longitude
         geohash = geohash2.encode(latitude, longitude)
-    except geoip2.errors.AddressNotFoundError:
+    except (geoip2.errors.AddressNotFoundError, Exception) as err:
         geohash = "UNKNOW"
     MySeriesHelper(time=entry[TIME][1:-1],
                    server_name='Malilog-server-1',
