@@ -1,10 +1,11 @@
 # Install grafana (dashboard)
-echo "deb https://packages.grafana.com/oss/deb stable main" > /etc/apt/sources.list.d/grafana.list
 apt-get update
-apt-get upgrade
 apt-get install -y curl
 apt-get install  -y apt-transport-https
 curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo "deb https://packages.grafana.com/oss/deb stable main" > /etc/apt/sources.list.d/grafana.list
+apt-get update
+apt-get upgrade
 apt-get install -y grafana
 
 grafana-cli plugins install grafana-piechart-panel
@@ -31,6 +32,7 @@ cp dashboard.yaml /etc/grafana/provisioning/dashboards/
 cp MalilogDashboard.json /var/lib/grafana/dashboards
 
 # Install influxdb python API
+apt-get clean
 apt-get install -y python3-pip
 python3 -m pip install influxdb
 
@@ -38,6 +40,7 @@ python3 -m pip install influxdb
 mkdir geolite2-city
 wget https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 tar -xzf GeoLite2-City.tar.gz -C geolite2-city --strip-components=1
+rm -R --interactive=never GeoLite2-City.tar.gz
 mkdir /usr/share/geolocation-database
 mv geolite2-city /usr/share/geolocation-database
 python3 -m pip install geoip2
