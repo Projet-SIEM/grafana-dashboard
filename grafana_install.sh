@@ -45,3 +45,7 @@ mkdir /usr/share/geolocation-database
 mv geolite2-city /usr/share/geolocation-database
 python3 -m pip install geoip2
 python3 -m pip install Geohash2
+
+# Reload service so the imported dashboard and datasource are used.
+systemctl stop grafana-server
+systemctl start grafana-server
