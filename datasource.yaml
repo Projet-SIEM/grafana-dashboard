@@ -24,7 +24,7 @@ datasources:
   # <string> database user, if used
   user:
   # <string> database name, if used
-  database: malilog_logs
+  database: malilog
   # <bool> enable/disable basic auth
   basicAuth:
   # <string> basic auth username

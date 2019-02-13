@@ -15,9 +15,9 @@ PORT_DST = 6
 LOG_MSG = 7
 
 client = InfluxDBClient(host='localhost', port=8086)
-client.drop_database('malilog_logs')
-client.create_database('malilog_logs')
-client.switch_database('malilog_logs')
+client.drop_database('malilog')
+client.create_database('malilog')
+client.switch_database('malilog')
 
 
 def get_logs_lines(path):
@@ -26,7 +26,7 @@ def get_logs_lines(path):
             tokens = []
             tokens_raw = line.strip().split()
             date = ' '.join([tokens_raw[0], tokens_raw[1]])
-            tokens.append(date)
+            tokens.append(date[1:-1])
             tokens.extend(tokens_raw[2:8])
             msg = ' '.join(tokens_raw[8:len(tokens_raw)])
             tokens.append(msg)
@@ -44,13 +44,13 @@ class MySeriesHelper(SeriesHelper):
 
         # The series name must be a string. Add dependent fields/tags
         # in curly brackets.
-        series_name = '{server_name}'
+        series_name = '{table}'
 
         # Defines all the fields in this time series.
         fields = ['port_src', 'port_dst']
 
         # Defines all the tags for the series.
-        tags = ['server_name', 'src_geohash', 'l3_proto', 'l4_proto', "ip_src", "ip_dst", "log_message"]
+        tags = ['src_geohash', 'l3_proto', 'l4_proto', "ip_src", "ip_dst", "log_message"]
 
         # Defines the number of data points to store prior to writing
         # on the wire.
@@ -75,11 +75,11 @@ for entry in entries:
         latitude = geoloc.location.latitude
         longitude = geoloc.location.longitude
         geohash = geohash2.encode(latitude, longitude)
-    except (geoip2.errors.AddressNotFoundError, Exception) as err:
+    except (geoip2.errors.AddressNotFoundError, Exception):
         geohash = "UNKNOW"
-    MySeriesHelper(time=entry[TIME][1:-1],
-                   server_name='Malilog-server-1',
-                   src_geohash = geohash,
+    MySeriesHelper(time=entry[TIME],
+                   table='Malilog-logs',
+                   src_geohash=geohash,
                    l3_proto=entry[L3_PROTO],
                    l4_proto=entry[L4_PROTO],
                    ip_src=entry[IP_SRC], ip_dst=entry[IP_DST],
