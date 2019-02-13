@@ -183,8 +183,8 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 2,
+        "w": 13,
         "x": 0,
         "y": 11
       },
@@ -278,13 +278,124 @@
       "valueName": "avg"
     },
     {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 11,
+        "x": 13,
+        "y": 11
+      },
+      "id": 14,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "count_port_dst",
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT count(*) FROM \"Malilog-alerts\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": "",
+      "title": "Nombre d'alertes levées",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "avg"
+    },
+    {
       "columns": [],
       "fontSize": "100%",
       "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 11
+        "h": 8,
+        "w": 13,
+        "x": 0,
+        "y": 13
       },
       "hideTimeOverride": false,
       "id": 12,
@@ -370,7 +481,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 21
       },
       "id": 2,
       "links": [],
@@ -460,6 +571,90 @@
       "type": "table"
     },
     {
+      "columns": [],
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 16,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/port_*/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT time, time_event, alert_type, ip_src,port_src,ip_dst,port_dst,l3_proto, l4_proto,log_message FROM \"Malilog-alerts\" WHERE $timeFilter ORDER BY time DESC LIMIT 15 ",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Les 15 dernières alertes",
+      "transform": "table",
+      "type": "table"
+    },
+    {
       "circleMaxSize": "12",
       "circleMinSize": "1",
       "colors": [
@@ -476,7 +671,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 38
       },
       "hideEmpty": false,
       "hideZero": false,
@@ -512,7 +707,7 @@
           "measurement": "Malilog-logs",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT count(\"port_src\") AS \"metric\" FROM \"Malilog-logs\" WHERE (\"src_geohash\" != 'UNKNOW') AND time > 0 GROUP BY \"src_geohash\"\n",
+          "query": "SELECT count(\"port_src\") AS \"metric\" FROM \"Malilog-logs\" WHERE (\"src_geohash\" != 'UNKNOW') AND $timeFilter GROUP BY \"src_geohash\"\n",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "table",
@@ -547,6 +742,101 @@
       ],
       "thresholds": "4,50",
       "title": "Géolocalisation des visiteurs de l'application Malilog",
+      "transparent": false,
+      "type": "grafana-worldmap-panel",
+      "unitPlural": "",
+      "unitSingle": "",
+      "unitSingular": "",
+      "valueName": "total"
+    },
+    {
+      "circleMaxSize": "12",
+      "circleMinSize": "1",
+      "colors": [
+        "#629e51",
+        "rgba(237, 129, 40, 0.89)",
+        "#bf1b00"
+      ],
+      "datasource": "InfluxDB",
+      "decimals": 0,
+      "esGeoPoint": "src_geohash",
+      "esLocationName": "",
+      "esMetric": "metric",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "hideEmpty": false,
+      "hideZero": false,
+      "id": 17,
+      "initialZoom": 1,
+      "links": [],
+      "locationData": "geohash",
+      "mapCenter": "(0°, 0°)",
+      "mapCenterLatitude": 0,
+      "mapCenterLongitude": 0,
+      "maxDataPoints": 1,
+      "mouseWheelZoom": false,
+      "showLegend": true,
+      "stickyLabels": false,
+      "tableQueryOptions": {
+        "geohashField": "geohash",
+        "latitudeField": "latitude",
+        "longitudeField": "longitude",
+        "metricField": "metric",
+        "queryType": "geohash"
+      },
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "src_geohash"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "Malilog-logs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT count(\"port_src\") AS \"metric\" FROM \"Malilog-alerts\" WHERE (\"src_geohash\" != 'UNKNOW') AND $timeFilter GROUP BY \"src_geohash\"\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "port_src"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "metric"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "src_geohash",
+              "operator": "!=",
+              "value": "UNKNOW"
+            }
+          ]
+        }
+      ],
+      "thresholds": "4,50",
+      "title": "Géolocalisation des IP sources qui ont déclenché des alertess",
       "transparent": false,
       "type": "grafana-worldmap-panel",
       "unitPlural": "",
@@ -593,5 +883,5 @@
   "timezone": "",
   "title": "Malilog SIEM Dashboard (builded with JSON descriptor)",
   "uid": "GTYplVXiz",
-  "version": 2
+  "version": 1
 }
