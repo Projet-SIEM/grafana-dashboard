@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 from influxdb import InfluxDBClient
 from influxdb import SeriesHelper
@@ -44,7 +45,7 @@ class MySeriesHelper(SeriesHelper):
 
         # The series name must be a string. Add dependent fields/tags
         # in curly brackets.
-        series_name = '{table}'
+        series_name = 'Malilog-logs'
 
         # Defines all the fields in this time series.
         fields = ['port_src', 'port_dst']
@@ -78,7 +79,6 @@ for entry in entries:
     except (geoip2.errors.AddressNotFoundError, Exception):
         geohash = "UNKNOW"
     MySeriesHelper(time=entry[TIME],
-                   table='Malilog-logs',
                    src_geohash=geohash,
                    l3_proto=entry[L3_PROTO],
                    l4_proto=entry[L4_PROTO],
