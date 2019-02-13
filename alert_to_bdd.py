@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import datetime
 from influxdb import InfluxDBClient
@@ -21,7 +22,7 @@ SECTION_MARKER = "=-=-=-=-=-=-="
 client = InfluxDBClient(host='localhost', port=8086)
 # client.drop_database('malilog_logs')
 # client.create_database('malilog_logs')
-client.switch_database('malilog_logs')
+client.switch_database('malilog')
 
 
 def get_time_now():
@@ -37,7 +38,7 @@ def parse_log_line(line):
     tokens.extend(tokens_raw[2:8])
     msg = ' '.join(tokens_raw[8:len(tokens_raw)])
     tokens.append(msg)
-    yield tokens
+    return tokens
 
 
 def get_logs_lines(path):
@@ -46,16 +47,16 @@ def get_logs_lines(path):
 
     with open(path, 'r') as f:
         for line in f:
-            if line.strip == "":
+            line = line.strip()
+            if line == "":
                 pass
             elif line == SECTION_MARKER:
                 current_section_name = last_line
             elif current_section_name != "Header" and line.startswith("["):
                 tokens = parse_log_line(line)
-                tokens.extend(get_time_now())
-                tokens.extend(current_section_name)
+                tokens.extend([get_time_now()])
+                tokens.extend([current_section_name])
                 yield tokens
-
             last_line = line
 
 class MySeriesHelper(SeriesHelper):
@@ -69,7 +70,7 @@ class MySeriesHelper(SeriesHelper):
 
         # The series name must be a string. Add dependent fields/tags
         # in curly brackets.
-        series_name = '{table_name}'
+        series_name = 'Malilog-alerts'
 
         # Defines all the fields in this time series.
         fields = ['port_src', 'port_dst', 'time_event']
@@ -86,7 +87,7 @@ class MySeriesHelper(SeriesHelper):
 
 
 if len(sys.argv) < 2:
-    print("Error : need log file path as parameter")
+    print("Error : need logcheck alert output filepath as parameter")
     exit(-1)
 
 entries = get_logs_lines(sys.argv[1])
@@ -103,7 +104,6 @@ for entry in entries:
     except (geoip2.errors.AddressNotFoundError, Exception):
         geohash = "UNKNOW"
     MySeriesHelper(time=entry[TIME_ALERT],
-                   table_name='Malilog-alerts',
                    time_event=entry[TIME],
                    alert_type=entry[ALERT_TYPE],
                    src_geohash=geohash,
