@@ -56,3 +56,4 @@ cp alert_to_bdd.py /home/vagrant/grafana-dashboard/alert_to_bdd.py
 # Reload service so the imported dashboard and datasource are used.
 systemctl stop grafana-server
 systemctl start grafana-server
+systemctl enable grafana-server
