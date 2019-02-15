@@ -69,7 +69,7 @@ reader = geoip2.database.Reader(GEOLOC_DB_PATH)
 
 # e.g [2019-02-06 14:27:40] TCP ipv4 139.143.119.26  18.123.82.2 30249 43781 Default message for logs
 for entry in entries:
-    print("Current log line : ", entry)
+    # print("Current log line : ", entry)
     try:
         geoloc = reader.city(entry[IP_SRC])
         latitude = geoloc.location.latitude
