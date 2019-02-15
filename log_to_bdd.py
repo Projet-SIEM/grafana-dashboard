@@ -16,10 +16,9 @@ PORT_DST = 6
 LOG_MSG = 7
 
 client = InfluxDBClient(host='localhost', port=8086)
-client.drop_database('malilog')
 client.create_database('malilog')
 client.switch_database('malilog')
-
+client.drop_measurement('Malilog-logs')
 
 def get_logs_lines(path):
     with open(path, 'r') as f:

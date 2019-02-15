@@ -49,6 +49,10 @@ mv geolite2-city /usr/share/geolocation-database
 python3 -m pip install geoip2
 python3 -m pip install Geohash2
 
+mkdir -p /vagrant/grafana-dashboard
+cp log_to_bdd.py /vagrant/grafana-dashboard/log_to_bdd.py
+cp alert_to_bdd.py /vagrant/grafana-dashboard/alert_to_bdd.py
+cp ./logcheck /etc/cron.d/logcheck
 # Reload service so the imported dashboard and datasource are used.
 systemctl stop grafana-server
 systemctl start grafana-server

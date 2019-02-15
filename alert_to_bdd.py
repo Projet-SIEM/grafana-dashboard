@@ -20,10 +20,9 @@ ALERT_TYPE = 9
 SECTION_MARKER = "=-=-=-=-=-=-="
 
 client = InfluxDBClient(host='localhost', port=8086)
-# client.drop_database('malilog_logs')
-# client.create_database('malilog_logs')
+client.create_database('malilog')
 client.switch_database('malilog')
-
+#client.drop_measurement('Malilog-alerts')
 
 def get_time_now():
     now = datetime.datetime.now()
