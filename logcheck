@@ -1,7 +1,7 @@
 # /etc/cron.d/logcheck: crontab entries for the logcheck package
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-MAILTO=root
+MAILTO=admin@siem.mail
 
 @reboot         logcheck    if [ -x /usr/sbin/logcheck ]; then nice -n10 /usr/sbin/logcheck -t -o -R; fi
 */5 * * * *     logcheck    if [ -x /usr/sbin/logcheck ]; then (/usr/sbin/logcheck -t -o > /tmp/logcheck-report.txt ; python3 /vagrant/grafana-dashboard/alert_to_bdd.py /tmp/logcheck-report.txt ; /vagrant/grafana-dashboard/log_to_bdd.py /vagrant/logs.log ; nice -n10 /usr/sbin/logcheck); fi
