@@ -97,7 +97,7 @@ for entry in entries:
     print("Current log line : ", entry)
 
     if "alert" not in entry[ALERT_TYPE].lower():
-        break
+        continue
     try:
         geoloc = reader.city(entry[IP_SRC])
         latitude = geoloc.location.latitude
