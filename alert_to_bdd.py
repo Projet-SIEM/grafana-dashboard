@@ -96,7 +96,7 @@ reader = geoip2.database.Reader(GEOLOC_DB_PATH)
 for entry in entries:
     print("Current log line : ", entry)
 
-    if "alert" in entry[ALERT_TYPE]:
+    if "alert" in entry[ALERT_TYPE].lower():
         break
     try:
         geoloc = reader.city(entry[IP_SRC])
