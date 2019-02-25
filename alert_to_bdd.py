@@ -24,6 +24,7 @@ client.create_database('malilog')
 client.switch_database('malilog')
 #client.drop_measurement('Malilog-alerts')
 
+
 def get_time_now():
     now = datetime.datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S")
@@ -31,6 +32,7 @@ def get_time_now():
 
 def parse_log_line(line):
     tokens = []
+    line = line.replace("[\x00", "").replace("\x00", "")
     tokens_raw = line.strip().split()
     date = ' '.join([tokens_raw[0], tokens_raw[1]])
     tokens.append(date[1:-1])
@@ -57,6 +59,7 @@ def get_logs_lines(path):
                 tokens.extend([current_section_name])
                 yield tokens
             last_line = line
+
 
 class MySeriesHelper(SeriesHelper):
     """Instantiate SeriesHelper to write points to the backend."""
