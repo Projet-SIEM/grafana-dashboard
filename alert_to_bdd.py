@@ -17,7 +17,7 @@ PORT_DST = 6
 LOG_MSG = 7
 TIME_ALERT = 8
 ALERT_TYPE = 9
-SECTION_MARKER = "=-=-=-=-=-=-="
+SECTION_MARKER = "=-=-=-=-="
 
 client = InfluxDBClient(host='localhost', port=8086)
 client.create_database('malilog')
@@ -51,7 +51,7 @@ def get_logs_lines(path):
             line = line.strip()
             if line == "":
                 pass
-            elif line == SECTION_MARKER:
+            elif line.startswith(SECTION_MARKER):
                 current_section_name = last_line
             elif current_section_name != "Header" and line.startswith("["):
                 tokens = parse_log_line(line)
